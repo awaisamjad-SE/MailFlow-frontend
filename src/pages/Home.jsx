@@ -1,5 +1,5 @@
 import { useTheme } from '../context/ThemeContext';
-import { Mail, Sun, Moon, Zap, Users, Sparkles, Layout, ArrowRight, Play, CheckCircle2 } from 'lucide-react';
+import { Mail, Sun, Moon, Zap, Users, Sparkles, Layout, ArrowRight, Play, CheckCircle2, ShieldAlert, Key, Settings2 } from 'lucide-react';
 
 export default function Home({ onEnter }) {
   const { isDark, toggle } = useTheme();
@@ -34,20 +34,27 @@ export default function Home({ onEnter }) {
   const steps = [
     {
       number: '01',
-      title: 'Choose Mode',
-      desc: 'Select from 4 unique sending options depending on your current needs.',
+      title: 'Configure Webhook',
+      desc: 'Set up your self-hosted n8n webhook URL in settings. It is stored securely in your LocalStorage.',
     },
     {
       number: '02',
       title: 'Draft & Preview',
-      desc: 'Compose using our Rich Editor or load templates. Watch the live iframe preview render HTML.',
+      desc: 'Compose using our Rich Editor or select pre-built templates. Review the live sandboxed HTML preview.',
     },
     {
       number: '03',
       title: 'Automated Dispatch',
-      desc: 'MailFlow contacts the backend workflow to throttle and deliver emails reliably.',
+      desc: 'MailFlow pushes payloads directly to your n8n workflow for queued background delivery.',
     },
   ];
+
+  const scrollToSetup = () => {
+    const el = document.getElementById('setup-guide');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="min-h-screen app-bg flex flex-col justify-between overflow-x-hidden relative">
@@ -100,8 +107,8 @@ export default function Home({ onEnter }) {
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-6 pt-20 pb-16 text-center z-10 flex-1 flex flex-col justify-center">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full surface-2 border border-theme text-xs font-semibold t2 mb-6">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>n8n Webhook Enabled Automation</span>
+          <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+          <span>Requires custom n8n webhook setup</span>
         </div>
 
         <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight t1 max-w-4xl mx-auto leading-tight md:leading-none">
@@ -123,14 +130,12 @@ export default function Home({ onEnter }) {
             <Play className="w-5 h-5 fill-current" />
             <span>Launch Application</span>
           </button>
-          <a
-            href="https://n8n.awaisamjad.engineer/webhook/send-email"
-            target="_blank"
-            rel="noreferrer"
+          <button
+            onClick={scrollToSetup}
             className="btn-ghost px-8 py-3.5 text-base"
           >
-            <span>Webhook Endpoint</span>
-          </a>
+            <span>Webhook Setup Guide</span>
+          </button>
         </div>
 
         {/* Stats bar */}
@@ -141,15 +146,15 @@ export default function Home({ onEnter }) {
           </div>
           <div>
             <h4 className="text-3xl font-extrabold t1 bg-gradient-to-r from-indigo-500 to-blue-500 bg-clip-text text-transparent">100% Client</h4>
-            <p className="text-xs font-semibold t3 uppercase tracking-wider mt-1">No Backend Needed</p>
+            <p className="text-xs font-semibold t3 uppercase tracking-wider mt-1">No Database Needed</p>
           </div>
           <div>
             <h4 className="text-3xl font-extrabold t1 bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">Live HTML</h4>
             <p className="text-xs font-semibold t3 uppercase tracking-wider mt-1">Real-Time Preview</p>
           </div>
           <div>
-            <h4 className="text-3xl font-extrabold t1 bg-gradient-to-r from-cyan-500 to-violet-500 bg-clip-text text-transparent">Fast & Safe</h4>
-            <p className="text-xs font-semibold t3 uppercase tracking-wider mt-1">CSV Bulk Engine</p>
+            <h4 className="text-3xl font-extrabold t1 bg-gradient-to-r from-cyan-500 to-violet-500 bg-clip-text text-transparent">LocalStorage</h4>
+            <p className="text-xs font-semibold t3 uppercase tracking-wider mt-1">Private & Secure</p>
           </div>
         </div>
       </section>
@@ -201,6 +206,84 @@ export default function Home({ onEnter }) {
             </div>
           ))}
 
+        </div>
+      </section>
+
+      {/* Setup Guide Section */}
+      <section id="setup-guide" className="surface-1 border-t border-theme py-24 z-10">
+        <div className="max-w-4xl mx-auto px-6 space-y-12">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl font-bold tracking-tight t1">n8n Webhook Setup Guide</h2>
+            <p className="text-base t2 max-w-2xl mx-auto">
+              MailFlow operates entirely on your browser. To send emails, you must configure your own n8n webhook workflow URL.
+            </p>
+          </div>
+
+          {/* Privacy Banner */}
+          <div className="alert-info border border-theme rounded-2xl flex items-start gap-4 p-5">
+            <ShieldAlert className="w-6 h-6 shrink-0 text-[var(--info-text)] mt-0.5" />
+            <div className="text-sm">
+              <p className="font-bold mb-1">Privacy & Safety Notice</p>
+              <p className="opacity-90 leading-relaxed">
+                By default, MailFlow ships with **no preset webhook endpoint**. This keeps your email operations secure. All API endpoints you add are stored strictly in your browser's local sandbox (`localStorage`) and are called directly from your client machine.
+              </p>
+            </div>
+          </div>
+
+          {/* Step-by-Step Instructions */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="card p-6 flex gap-4 border border-theme">
+              <div className="w-10 h-10 rounded-xl bg-[var(--accent-bg)] border border-[var(--accent-border)] flex items-center justify-center text-white shrink-0">
+                <Key className="w-5 h-5 accent-text" />
+              </div>
+              <div className="space-y-1.5">
+                <h4 className="font-bold text-base t1">1. Sign In to Dashboard</h4>
+                <p className="text-sm t2 leading-relaxed">
+                  Click the **Launch Application** button at the top. Sign in using the default administrator credentials:
+                </p>
+                <div className="p-3 bg-[var(--surface-2)] rounded-lg text-xs font-semibold t2 space-y-1 border border-theme mt-2 select-all">
+                  <div>Username: <code className="accent-text">admin</code></div>
+                  <div>Password: <code className="accent-text">admin</code></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="card p-6 flex gap-4 border border-theme">
+              <div className="w-10 h-10 rounded-xl bg-[var(--accent-bg)] border border-[var(--accent-border)] flex items-center justify-center text-white shrink-0">
+                <Settings2 className="w-5 h-5 accent-text" />
+              </div>
+              <div className="space-y-1.5">
+                <h4 className="font-bold text-base t1">2. Open API Configuration</h4>
+                <p className="text-sm t2 leading-relaxed font-medium">
+                  Once logged in, click the **Cog (Settings)** button in the top right header navigation. This slides open the Endpoint settings panel.
+                </p>
+              </div>
+            </div>
+
+            <div className="card p-6 flex gap-4 border border-theme">
+              <div className="w-10 h-10 rounded-xl bg-[var(--accent-bg)] border border-[var(--accent-border)] flex items-center justify-center text-white shrink-0">
+                <Mail className="w-5 h-5 accent-text" />
+              </div>
+              <div className="space-y-1.5">
+                <h4 className="font-bold text-base t1">3. Enter your n8n Endpoint</h4>
+                <p className="text-sm t2 leading-relaxed">
+                  Paste your active n8n Production Webhook URL. It should accept JSON payloads containing recipients and email details.
+                </p>
+              </div>
+            </div>
+
+            <div className="card p-6 flex gap-4 border border-theme">
+              <div className="w-10 h-10 rounded-xl bg-[var(--accent-bg)] border border-[var(--accent-border)] flex items-center justify-center text-white shrink-0">
+                <CheckCircle2 className="w-5 h-5 accent-text" />
+              </div>
+              <div className="space-y-1.5">
+                <h4 className="font-bold text-base t1">4. Save and Update Anytime</h4>
+                <p className="text-sm t2 leading-relaxed">
+                  Click **Save Changes**. The endpoint is stored locally. If you ever change n8n domains or deploy new webhook paths, simply open the Cog icon again to update or reset it.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
